@@ -2,4 +2,4 @@
 
 Tasks Management Web App Using React JS, Context API, React Hooks and Tailwind CSS
 
-Open [https://appwrite-hackathon-2023.vercel.app/](Task-Management-Web-App) to view it in your browser.
+Open [Task Management Web App](https://appwrite-hackathon-2023.vercel.app/) to view it in your browser.
