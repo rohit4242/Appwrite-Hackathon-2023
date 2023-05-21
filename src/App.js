@@ -1,39 +1,29 @@
-import React, { useContext } from "react";
-import AccountData from "./components/AccountSection/AccountData";
-import Footer from "./components/Footer";
-import Menu from "./components/Menu/Menu";
-import TasksSection from "./components/TasksSection/TasksSection";
-import ModalCreateTask from "./components/Utilities/ModalTask";
-import { ModalContext } from "./Context/Modal/ModalContext";
-import { TasksContext } from "./Context/Tasks/TasksContext";
+import React from "react";
+import NotFound from "./Pages/NotFound";
+import SignIn from "./Pages/SignIn";
+import SignUp from "./Pages/SignUp";
+import { UserAuthContextProvider } from "./Context/Authentication/AuthContext";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRouter from "./Router/ProtectedRouter";
+import Dashboard from "./Pages/Dashboard";
 
 const App = () => {
-  const { state: modalState, dispatch: modalDispatch } =
-    useContext(ModalContext);
-  const { dispatch: tasksDispatch } = useContext(TasksContext);
-
-  const closeModalCreateTask = () => {
-    modalDispatch({ type: "CLOSE_MODAL_CREATE_TASK" });
-  };
-
-  const createNewTaskHandler = (task) => {
-    tasksDispatch({ type: "ADD_NEW_TASK", payload: task });
-  };
-
   return (
-    <div className="bg-[#c4d1e1] min-h-screen text-slate-600 dark:bg-slate-900 dark:text-slate-400 xl:text-lg sm:text-base text-base">
-      {modalState.modalCreateTaskOpen && (
-        <ModalCreateTask
-          onClose={closeModalCreateTask}
-          nameForm="Add a task"
-          onConfirm={createNewTaskHandler}
+    <UserAuthContextProvider>
+      <Routes>
+        <Route path="signIn" element={<SignIn />} />
+        <Route path="signUp" element={<SignUp />} />
+        <Route
+          path="/*"
+          element={
+            <ProtectedRouter>
+              <Dashboard />
+            </ProtectedRouter>
+          }
         />
-      )}
-      <Menu />
-      <TasksSection />
-      <Footer />
-      <AccountData />
-    </div>
+        <Route path="*" element={<NotFound h1={"404"} />} />
+      </Routes>
+    </UserAuthContextProvider>
   );
 };
 

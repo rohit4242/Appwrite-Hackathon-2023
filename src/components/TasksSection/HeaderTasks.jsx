@@ -5,10 +5,11 @@ import avatar1 from "../../assets/avatar-1.jpg";
 import SearchField from "./SearchField";
 import { MenusContext } from "../../Context/Menus/MenusContext";
 import Notification from "./Notification";
+import { useUserAuth } from "../../Context/Authentication/AuthContext";
 
 const HeaderTasks = () => {
   const { dispatch } = useContext(MenusContext);
-
+  const { user } = useUserAuth()
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth();
@@ -66,7 +67,7 @@ const HeaderTasks = () => {
 
         <button onClick={openMenuAccountHandler} className="block xl:hidden">
           <img
-            src={avatar1}
+            src={`${user?.photoURL ? user?.photoURL : avatar1}`}
             alt="cat"
             className="w-10 h-10 ml-4 rounded-full"
           />

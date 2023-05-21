@@ -11,7 +11,7 @@ import HeaderTasks from "./HeaderTasks";
 
 const TasksSection = () => {
   return (
-    <main className=" pt-5 pb-8 sm:pb-16 px-3 md:px-8 md:w-full xl:w-8/12 m-auto min-h-screen">
+    <main className="min-h-screen px-3 pt-5 pb-8 m-auto sm:pb-16 md:px-8 md:w-full xl:w-8/12">
       <HeaderTasks />
       <Routes>
         <Route path="/" element={<Home />} />
