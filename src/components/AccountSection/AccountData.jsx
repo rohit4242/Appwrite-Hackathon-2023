@@ -22,7 +22,7 @@ const AccountData = () => {
       <section className="flex flex-col h-full p-5">
         <span className="flex items-center mx-auto">
           <span className="font-medium">Hi, User!</span>
-          <img src={avatar1} alt="cat" className="w-10 ml-4 rounded-full" />
+          <img src={avatar1} alt="User" className="w-10 ml-4 rounded-full" />
         </span>
 
         <DarkMode />
