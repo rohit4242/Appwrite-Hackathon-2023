@@ -1,68 +1,72 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { auth, db } from "../../firebase";
-import { ref, set } from "firebase/database";
+import React, { createContext, useState, useContext } from "react";
+
+import account from "../../appwriteConfig";
+import { ID } from "appwrite";
+import { useNavigate } from "react-router-dom";
 
 const UserAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleLogin(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+  const navigate = useNavigate();
+
+  async function handleLogin(email, password) {
+    try {
+      await account.createEmailSession(email, password);
+      const user = await account.get();
+      setUser(user);
+      localStorage.setItem("userUID", user.$id);
+    } catch (error) {
+      console.log(error);
+      setError("Please Enter Valid Details");
+    }
   }
 
-  function handleSignUp(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function handleSignUp(email, password, name) {
+    try {
+      await account.create(ID.unique(), email, password, name);
+      const user = await account.get();
+      setUser(user);
+      localStorage.setItem("userUID", user.$id);
+    } catch (error) {
+      console.log(error);
+      setError("Please Enter Valid Details");
+    }
   }
 
-  function handleGoogleSignIn() {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+  // const getCurrentUser = () => {
+  //   return account.get();
+  // };
+
+  // const loadUser = async () => {
+  //   const user = await getCurrentUser().catch((e) => console.log(e));
+  //   console.log(user);
+  //   setUser(user);
+  // };
+  async function handleLogout() {
+    try {
+      localStorage.clear();
+      setUser(null);
+      navigate("/signIn");
+      await account.deleteSession("current");
+    } catch (error) {
+      console.log(error);
+      setError("Something Wrong try again");
+    }
   }
+  // useEffect(() => {
+  //   loadUser();
+  // }, []);
 
-  function handleLogout() {
-    return signOut(auth);
-  }
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsInitialized(true);
-      if (currentUser) {
-        const { uid, providerData } = currentUser;
-        const current = new Date().getTime();
-        const dbRef = ref(db, `User_Info/Users/${uid}`);
-        set(dbRef, {
-          Info: providerData[0],
-          Time: current,
-        });
-        localStorage.setItem("userUID", uid);
-      }
-    });
-
-    // clean up function to unsubscribe from the auth state listener
-    return unsubscribe;
-  }, []);
-
-  if (!isInitialized) {
-    // Show loading spinner or something until Firebase is initialized
-    return <div>Loading...</div>;
-  }
   const value = {
     user,
+    error,
     handleLogin,
     handleSignUp,
     handleLogout,
-    handleGoogleSignIn,
+    setError,
   };
 
   return (

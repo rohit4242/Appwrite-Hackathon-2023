@@ -4,9 +4,8 @@ import { useUserAuth } from "../Context/Authentication/AuthContext";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { handleLogin, handleGoogleSignIn } = useUserAuth();
+  const { error, setError, handleLogin } = useUserAuth();
 
   const navigate = useNavigate();
 
@@ -23,16 +22,16 @@ const SignIn = () => {
     setLoading(false);
   };
 
-  const handleGoogle = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await handleGoogleSignIn();
-      navigate("/");
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+  // const handleGoogle = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   try {
+  //     await handleGoogleSignIn();
+  //     navigate("/");
+  //   } catch (error) {
+  //     setError(error.message);
+  //   }
+  // };
 
   return (
     <section>
@@ -116,7 +115,7 @@ const SignIn = () => {
                   Sign up now
                 </Link>
               </div>
-              <div className="relative my-4">
+              {/* <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
@@ -172,7 +171,7 @@ const SignIn = () => {
                     <span className="ml-4"> Log in with Google</span>
                   </div>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

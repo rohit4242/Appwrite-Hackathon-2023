@@ -11,9 +11,6 @@ const AccountData = () => {
   const { state, dispatch } = useContext(MenusContext);
   const { user,handleLogout } = useUserAuth();
 
-  // const handleLogOut = () => {
-    
-  // }
   const closeMenuHandler = () => {
     dispatch({ type: "CLOSE_MENU_ACCOUNT" });
   };
@@ -26,7 +23,7 @@ const AccountData = () => {
     >
       <section className="flex flex-col h-full p-5">
         <span className="flex items-center mx-auto">
-          <span className="font-medium">Hi, {`${user?.displayName ? user?.displayName : "User!"}`}</span>
+          <span className="font-medium">Hi, {`${user?.name ? user?.name : "User!"}`}</span>
           <img
             src={`${user?.photoURL ? user?.photoURL : avatar1}`}
             alt="User"
